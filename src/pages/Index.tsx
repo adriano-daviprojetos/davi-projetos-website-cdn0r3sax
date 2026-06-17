@@ -90,8 +90,8 @@ export default function Index() {
                 <CardTitle>Tecnologia Aplicada</CardTitle>
               </CardHeader>
               <CardContent className="text-center text-slate-600">
-                Uso de softwares de última geração para simulações 3D e cálculos precisos de
-                estabilidade e distribuição de cargas.
+                Uso de softwares de última geração para elaboração de planos de rigging e cálculos
+                precisos de estabilidade e distribuição de cargas.
               </CardContent>
             </Card>
           </div>
