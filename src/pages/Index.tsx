@@ -154,15 +154,15 @@ export default function Index() {
       <section className="py-20 bg-primary text-white">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-white/20">
           <div className="pt-8 md:pt-0">
-            <h3 className="text-5xl font-bold text-secondary mb-3">15+</h3>
+            <h3 className="text-5xl font-bold text-secondary mb-3">10+</h3>
             <p className="text-xl text-gray-300 font-medium">Anos de Experiência</p>
           </div>
           <div className="pt-8 md:pt-0">
-            <h3 className="text-5xl font-bold text-secondary mb-3">850+</h3>
+            <h3 className="text-5xl font-bold text-secondary mb-3">8000+</h3>
             <p className="text-xl text-gray-300 font-medium">Projetos Realizados</p>
           </div>
           <div className="pt-8 md:pt-0">
-            <h3 className="text-5xl font-bold text-secondary mb-3">12K+</h3>
+            <h3 className="text-5xl font-bold text-secondary mb-3">1000+</h3>
             <p className="text-xl text-gray-300 font-medium">Equipamentos Inspecionados</p>
           </div>
         </div>
