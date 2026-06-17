@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom'
 export default function Services() {
   return (
     <div className="w-full">
-      <div className="bg-primary text-white py-20 text-center">
+      <div className="bg-primary py-20 text-center text-[#ffffff]">
         <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Serviços de Engenharia de Rigging</h1>
-          <p className="text-lg md:text-xl text-gray-300 font-light">
+          <p className="text-lg md:text-xl font-light text-[#570303]">
             Catálogo completo de serviços especializados para garantir total segurança, conformidade
             e eficiência nas suas operações de içamento de carga.
             <div>Esta é nossa LandPage para contatos e solicitação de Serviços.</div>
