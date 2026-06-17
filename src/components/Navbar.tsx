@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
-import { Menu } from 'lucide-react'
+import { Menu, Instagram, Linkedin } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import logoUrl from '@/assets/logonovo-74529.png'
 
@@ -66,6 +66,26 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
+          <div className="flex items-center gap-3 ml-2 mr-2">
+            <a
+              href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent hover:scale-110 transition-all duration-200"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.instagram.com/davi_projetos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent hover:scale-110 transition-all duration-200"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
+          </div>
           <Button className="bg-accent hover:bg-accent/90 text-white" asChild>
             <Link to="/contato">Solicitar Orçamento</Link>
           </Button>
@@ -97,8 +117,28 @@ export function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              <div className="flex items-center gap-4 py-2 mt-2">
+                <a
+                  href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-accent hover:scale-110 transition-all duration-200"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.instagram.com/davi_projetos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-accent hover:scale-110 transition-all duration-200"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-6 h-6" />
+                </a>
+              </div>
               <Button
-                className="bg-accent hover:bg-accent/90 text-white w-full mt-4"
+                className="bg-accent hover:bg-accent/90 text-white w-full mt-2"
                 onClick={() => setMobileMenuOpen(false)}
                 asChild
               >

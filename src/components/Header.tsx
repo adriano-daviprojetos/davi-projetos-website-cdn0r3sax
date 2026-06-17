@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Instagram, Linkedin } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import logoUrl from '@/assets/logonovo-74529.png'
@@ -59,6 +59,26 @@ export function Header() {
               {link.name}
             </Link>
           ))}
+          <div className="flex items-center gap-3 mx-2">
+            <a
+              href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-secondary hover:scale-110 transition-all duration-200"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.instagram.com/davi_projetos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-secondary hover:scale-110 transition-all duration-200"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
+          </div>
           <Button
             asChild
             className="bg-secondary hover:bg-secondary/90 text-white rounded-md shadow-sm"
@@ -85,6 +105,26 @@ export function Header() {
               {link.name}
             </Link>
           ))}
+          <div className="flex items-center gap-4 py-2">
+            <a
+              href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-secondary hover:scale-110 transition-all duration-200"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="w-6 h-6" />
+            </a>
+            <a
+              href="https://www.instagram.com/davi_projetos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-secondary hover:scale-110 transition-all duration-200"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-6 h-6" />
+            </a>
+          </div>
           <Button asChild className="bg-secondary text-white mt-2 w-full">
             <Link to="/contato">Solicitar Orçamento</Link>
           </Button>

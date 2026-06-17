@@ -21,14 +21,20 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <a
-                href="#"
-                className="bg-white/10 p-2 rounded-full hover:bg-accent transition-colors"
+                href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 p-2 rounded-full hover:bg-accent hover:scale-110 transition-all duration-200"
+                aria-label="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
               </a>
               <a
-                href="#"
-                className="bg-white/10 p-2 rounded-full hover:bg-accent transition-colors"
+                href="https://www.instagram.com/davi_projetos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 p-2 rounded-full hover:bg-accent hover:scale-110 transition-all duration-200"
+                aria-label="Instagram"
               >
                 <Instagram className="w-4 h-4" />
               </a>
