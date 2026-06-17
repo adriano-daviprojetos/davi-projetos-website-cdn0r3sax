@@ -23,7 +23,7 @@ export default function Login() {
     if (error) {
       toast.error('Email ou senha inválidos')
     } else {
-      navigate('/admin')
+      navigate('/admin/dashboard')
     }
   }
 

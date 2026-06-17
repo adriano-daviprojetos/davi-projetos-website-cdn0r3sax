@@ -10,13 +10,13 @@ export function AdminLayout() {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/admin/login" replace />
   }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <header className="bg-white border-b px-6 py-4 flex items-center justify-between">
-        <Link to="/admin" className="font-bold text-lg text-primary">
+        <Link to="/admin/dashboard" className="font-bold text-lg text-primary">
           Davi Projetos Admin
         </Link>
         <div className="flex items-center gap-4">

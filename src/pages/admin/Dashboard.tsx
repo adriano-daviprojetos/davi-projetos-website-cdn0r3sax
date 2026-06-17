@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import useRequestsStore, { RequestEntry } from '@/stores/useRequestsStore'
 import {
@@ -24,9 +24,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { FileText, Clock, CheckCircle2, ListFilter } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { FileText, Clock, CheckCircle2, ListFilter, Search, Download } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useRealtime } from '@/hooks/use-realtime'
+import { Button } from '@/components/ui/button'
 
 const getStatusColor = (status: string) => {
   if (status === 'Pending') return 'bg-blue-500 hover:bg-blue-600'
@@ -39,21 +43,38 @@ const getTypeLabel = (type: string) => {
 }
 
 export default function Dashboard() {
-  const { requests, updateStatus } = useRequestsStore()
+  const { requests, loading, fetchRequests, updateStatus } = useRequestsStore()
   const [selectedRequest, setSelectedRequest] = useState<RequestEntry | null>(null)
-  const [filter, setFilter] = useState<string>('all')
+
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [typeFilter, setTypeFilter] = useState('all')
+
+  useEffect(() => {
+    fetchRequests()
+  }, [fetchRequests])
+
+  useRealtime('service_requests', () => {
+    fetchRequests()
+  })
 
   const filteredRequests = useMemo(() => {
-    if (filter === 'all') return requests
-    return requests.filter((r) => r.status === filter)
-  }, [requests, filter])
+    return requests.filter((r) => {
+      const matchSearch =
+        r.name.toLowerCase().includes(search.toLowerCase()) ||
+        r.email.toLowerCase().includes(search.toLowerCase())
+      const matchStatus = statusFilter === 'all' || r.status === statusFilter
+      const matchType = typeFilter === 'all' || r.request_type === typeFilter
+      return matchSearch && matchStatus && matchType
+    })
+  }, [requests, search, statusFilter, typeFilter])
 
   const total = requests.length
   const pending = requests.filter((r) => r.status === 'Pending').length
   const inProgress = requests.filter((r) => r.status === 'Reviewed').length
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-primary tracking-tight">Painel de Solicitações</h1>
@@ -98,21 +119,41 @@ export default function Dashboard() {
       </div>
 
       <Card className="border-none shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <CardTitle>Últimas Entradas</CardTitle>
-          <div className="flex items-center gap-2">
-            <ListFilter className="w-4 h-4 text-slate-500" />
-            <Select value={filter} onValueChange={setFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filtrar por Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="Pending">Pendentes</SelectItem>
-                <SelectItem value="Reviewed">Em Análise</SelectItem>
-                <SelectItem value="Finalizado">Finalizados</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
+              <Input
+                placeholder="Buscar por nome ou email..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-8"
+              />
+            </div>
+
+            <Tabs value={typeFilter} onValueChange={setTypeFilter} className="w-full md:w-auto">
+              <TabsList>
+                <TabsTrigger value="all">Todos</TabsTrigger>
+                <TabsTrigger value="atendimento">Atendimento</TabsTrigger>
+                <TabsTrigger value="proposta">Proposta</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <div className="flex items-center gap-2 w-full md:w-auto">
+              <ListFilter className="w-4 h-4 text-slate-500" />
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os Status</SelectItem>
+                  <SelectItem value="Pending">Pendentes</SelectItem>
+                  <SelectItem value="Reviewed">Em Análise</SelectItem>
+                  <SelectItem value="Finalizado">Finalizados</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -128,7 +169,13 @@ export default function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredRequests.length === 0 ? (
+                {loading && requests.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+                      Carregando...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredRequests.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8 text-slate-500">
                       Nenhuma solicitação encontrada.
@@ -186,7 +233,7 @@ export default function Dashboard() {
       </Card>
 
       <Dialog open={!!selectedRequest} onOpenChange={(o) => !o && setSelectedRequest(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl text-primary flex items-center gap-2">
               Detalhes da Solicitação
@@ -202,7 +249,7 @@ export default function Dashboard() {
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-6 mt-4 text-slate-700">
-              <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-lg">
                 <div>
                   <span className="block text-xs font-semibold text-slate-500 uppercase mb-1">
                     Nome
@@ -219,7 +266,12 @@ export default function Dashboard() {
                   <span className="block text-xs font-semibold text-slate-500 uppercase mb-1">
                     Email
                   </span>
-                  {selectedRequest.email}
+                  <a
+                    href={`mailto:${selectedRequest.email}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    {selectedRequest.email}
+                  </a>
                 </div>
                 <div>
                   <span className="block text-xs font-semibold text-slate-500 uppercase mb-1">
@@ -228,7 +280,7 @@ export default function Dashboard() {
                   {selectedRequest.phone}
                 </div>
                 {selectedRequest.location && (
-                  <div className="col-span-2">
+                  <div className="col-span-1 sm:col-span-2">
                     <span className="block text-xs font-semibold text-slate-500 uppercase mb-1">
                       Local da Obra
                     </span>
@@ -269,24 +321,35 @@ export default function Dashboard() {
                     Arquivos Anexos
                   </span>
                   <div className="flex flex-col gap-2">
-                    {selectedRequest.files.map((file) => (
-                      <a
-                        key={file}
-                        href={`${import.meta.env.VITE_POCKETBASE_URL}/api/files/service_requests/${selectedRequest.id}/${file}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-blue-500 hover:underline flex items-center gap-1"
-                      >
-                        <FileText className="w-4 h-4" />
-                        {file}
-                      </a>
-                    ))}
+                    {selectedRequest.files.map((file) => {
+                      const fileUrl = `${import.meta.env.VITE_POCKETBASE_URL}/api/files/service_requests/${selectedRequest.id}/${file}?download=1`
+                      return (
+                        <div
+                          key={file}
+                          className="flex items-center justify-between bg-white border p-2 rounded-md"
+                        >
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <FileText className="w-4 h-4 text-blue-500 shrink-0" />
+                            <span className="text-sm truncate" title={file}>
+                              {file}
+                            </span>
+                          </div>
+                          <Button variant="outline" size="sm" asChild className="shrink-0 ml-4">
+                            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                              <Download className="w-3 h-3 mr-2" /> Download
+                            </a>
+                          </Button>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               )}
 
-              <div className="pt-4 flex items-center justify-between border-t border-slate-100">
-                <span className="text-sm font-semibold text-slate-600">Alterar Status:</span>
+              <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-t border-slate-100 gap-3">
+                <span className="text-sm font-semibold text-slate-600">
+                  Alterar Status da Solicitação:
+                </span>
                 <Select
                   value={selectedRequest.status}
                   onValueChange={async (val: any) => {
@@ -294,7 +357,7 @@ export default function Dashboard() {
                     setSelectedRequest({ ...selectedRequest, status: val })
                   }}
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full sm:w-[200px]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

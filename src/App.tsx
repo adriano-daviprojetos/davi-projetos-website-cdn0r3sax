@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -30,10 +30,11 @@ const App = () => (
           </Route>
 
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
           </Route>
 
-          <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<Login />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

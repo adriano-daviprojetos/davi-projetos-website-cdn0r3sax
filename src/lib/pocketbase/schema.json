@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T16:14:31.980Z",
+  "generatedAt": "2026-06-17T16:17:49.444Z",
   "collections": [
     {
       "name": "users",
@@ -134,7 +134,9 @@
       ],
       "indexes": [
         "CREATE INDEX idx_service_requests_email ON service_requests (email)",
-        "CREATE INDEX idx_service_requests_type ON service_requests (request_type)"
+        "CREATE INDEX idx_service_requests_type ON service_requests (request_type)",
+        "CREATE INDEX `idx_sr_status` ON `service_requests` (status)",
+        "CREATE INDEX `idx_sr_created` ON `service_requests` (created)"
       ]
     }
   ]

@@ -1,61 +1,48 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import pb from '@/lib/pocketbase/client'
-import { useRealtime } from '@/hooks/use-realtime'
-
-export type RequestStatus = 'Pending' | 'Reviewed' | 'Finalizado'
-export type RequestType = 'proposta' | 'atendimento'
 
 export interface RequestEntry {
   id: string
-  request_type: RequestType
   name: string
   company: string
   email: string
   phone: string
+  request_type: 'atendimento' | 'proposta'
   location?: string
   description?: string
   services?: string[]
-  status: RequestStatus
-  created: string
+  status: 'Pending' | 'Reviewed' | 'Finalizado'
   files?: string[]
+  created: string
+  updated: string
 }
 
 export default function useRequestsStore() {
   const [requests, setRequests] = useState<RequestEntry[]>([])
+  const [loading, setLoading] = useState(false)
 
-  const loadData = useCallback(async () => {
-    if (!pb.authStore.isValid) return
+  const fetchRequests = useCallback(async () => {
+    setLoading(true)
     try {
       const records = await pb.collection('service_requests').getFullList<RequestEntry>({
         sort: '-created',
       })
       setRequests(records)
     } catch (e) {
-      console.error('Error fetching requests', e)
+      console.error(e)
+    } finally {
+      setLoading(false)
     }
   }, [])
 
-  useEffect(() => {
-    loadData()
-  }, [loadData])
-
-  useRealtime(
-    'service_requests',
-    () => {
-      loadData()
-    },
-    pb.authStore.isValid,
-  )
-
-  const updateStatus = useCallback(async (id: string, status: RequestStatus) => {
+  const updateStatus = async (id: string, status: string) => {
     try {
       await pb.collection('service_requests').update(id, { status })
-      // Optimitistic update
-      setRequests((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)))
+      setRequests((prev) => prev.map((r) => (r.id === id ? { ...r, status: status as any } : r)))
     } catch (e) {
-      console.error('Error updating status', e)
+      console.error(e)
     }
-  }, [])
+  }
 
-  return { requests, updateStatus }
+  return { requests, loading, fetchRequests, updateStatus }
 }
