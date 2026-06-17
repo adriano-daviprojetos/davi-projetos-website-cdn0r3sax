@@ -12,6 +12,8 @@ export default function Services() {
           <p className="text-lg md:text-xl text-gray-300 font-light">
             Catálogo completo de serviços especializados para garantir total segurança, conformidade
             e eficiência nas suas operações de içamento de carga.
+            <div>Esta é nossa LandPage para contatos e solicitação de Serviços.</div>
+            <div>Acesse nosso site e conheça mais sobra a Davi Projetos</div>
           </p>
         </div>
       </div>
