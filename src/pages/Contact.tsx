@@ -294,3 +294,26 @@ function ServicesForm() {
     </Form>
   )
 }
+
+export default function Contact() {
+  return (
+    <div className="container mx-auto py-12 px-4 max-w-4xl animate-fade-in">
+      <h1 className="text-4xl font-bold mb-4 text-center">Contato & Orçamentos</h1>
+      <p className="text-muted-foreground text-center mb-8">
+        Escolha uma das opções abaixo para entrar em contato com nossa equipe técnica.
+      </p>
+      <Tabs defaultValue="proposal" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="proposal">Solicitar Proposta</TabsTrigger>
+          <TabsTrigger value="services">Solicitar Atendimento</TabsTrigger>
+        </TabsList>
+        <TabsContent value="proposal">
+          <ProposalForm />
+        </TabsContent>
+        <TabsContent value="services">
+          <ServicesForm />
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
