@@ -9,11 +9,15 @@ export default function Services() {
       <div className="bg-primary py-20 text-center text-[#ffffff]">
         <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Serviços de Engenharia de Rigging</h1>
-          <p className="text-lg md:text-xl font-light text-[#570303]">
+          <p className="text-lg md:text-xl font-light text-[#ffffff]">
             Catálogo completo de serviços especializados para garantir total segurança, conformidade
             e eficiência nas suas operações de içamento de carga.
-            <div>Esta é nossa LandPage para contatos e solicitação de Serviços.</div>
-            <div>Acesse nosso site e conheça mais sobra a Davi Projetos</div>
+            <div className="text-[#f76363]">
+              Esta é nossa LandPage para contatos e solicitação de Serviços.
+            </div>
+            <div className="text-[#f76363]">
+              Acesse nosso site e conheça mais sobra a Davi Projetos
+            </div>
           </p>
         </div>
       </div>
