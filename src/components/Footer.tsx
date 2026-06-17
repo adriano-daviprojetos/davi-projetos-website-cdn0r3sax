@@ -34,7 +34,6 @@ export function Footer() {
               </a>
             </div>
           </div>
-
           <div>
             <h4 className="font-semibold mb-6 text-lg">Links Rápidos</h4>
             <ul className="space-y-3 text-sm text-primary-foreground/80">
@@ -65,7 +64,6 @@ export function Footer() {
               </li>
             </ul>
           </div>
-
           <div>
             <h4 className="font-semibold mb-6 text-lg">Serviços</h4>
             <ul className="space-y-3 text-sm text-primary-foreground/80">
@@ -91,25 +89,26 @@ export function Footer() {
               </li>
             </ul>
           </div>
-
           <div>
             <h4 className="font-semibold mb-6 text-lg">Contato</h4>
             <ul className="space-y-4 text-sm text-primary-foreground/80">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-accent shrink-0" />
                 <span>
-                  Av. Engenharia Moderna, 1000
+                  Rua Voluntários da Pátria, 3744&nbsp;
                   <br />
-                  São Paulo - SP
+                  Conj 86 - Santana
+                  <br />
+                  São Paulo - SP - CEP 02402-400
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-accent shrink-0" />
-                <span>+55 (11) 98888-7777</span>
+                <span>+55 (11) 96616-2222</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-accent shrink-0" />
-                <span>contato@daviprojetos.com.br</span>
+                <span>comercial@daviprojetos.com.br</span>
               </li>
             </ul>
           </div>
