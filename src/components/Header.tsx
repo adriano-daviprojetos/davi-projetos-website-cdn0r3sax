@@ -25,6 +25,7 @@ export function Header() {
     { name: 'Sobre a Empresa', path: '/sobre' },
     { name: 'Serviços de Engenharia de Rigging', path: '/servicos' },
     { name: 'Contato', path: '/contato' },
+    { name: 'Site Davi Projetos Oficial', path: 'https://daviprojetos.com.br', external: true },
   ]
 
   return (
@@ -47,18 +48,30 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8 font-medium">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={cn(
-                'hover:text-secondary transition-colors',
-                location.pathname === link.path && 'text-secondary font-semibold',
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.path}
+                href={link.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-secondary transition-colors"
+              >
+                {link.name}
+              </a>
+            ) : (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  'hover:text-secondary transition-colors',
+                  location.pathname === link.path && 'text-secondary font-semibold',
+                )}
+              >
+                {link.name}
+              </Link>
+            ),
+          )}
           <div className="flex items-center gap-3 mx-2">
             <a
               href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
@@ -96,15 +109,27 @@ export function Header() {
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white border-t shadow-lg py-4 px-4 flex flex-col gap-4 md:hidden animate-fade-in-down text-primary">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className="text-lg font-medium py-2 border-b border-gray-100 last:border-0"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.path}
+                href={link.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg font-medium py-2 border-b border-gray-100 last:border-0"
+              >
+                {link.name}
+              </a>
+            ) : (
+              <Link
+                key={link.path}
+                to={link.path}
+                className="text-lg font-medium py-2 border-b border-gray-100 last:border-0"
+              >
+                {link.name}
+              </Link>
+            ),
+          )}
           <div className="flex items-center gap-4 py-2">
             <a
               href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"

@@ -22,6 +22,7 @@ export function Navbar() {
     { name: 'Sobre a Empresa', path: '/sobre' },
     { name: 'Serviços de Engenharia de Rigging', path: '/servicos' },
     { name: 'Contato', path: '/contato' },
+    { name: 'Site Davi Projetos Oficial', path: 'https://daviprojetos.com.br', external: true },
   ]
 
   const isActive = (path: string) => {
@@ -53,19 +54,31 @@ export function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={cn(
-                'text-sm font-medium transition-colors hover:text-accent relative',
-                isActive(link.path) &&
-                  "text-accent after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-full after:h-0.5 after:bg-accent",
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.path}
+                href={link.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium transition-colors hover:text-accent relative"
+              >
+                {link.name}
+              </a>
+            ) : (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  'text-sm font-medium transition-colors hover:text-accent relative',
+                  isActive(link.path) &&
+                    "text-accent after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-full after:h-0.5 after:bg-accent",
+                )}
+              >
+                {link.name}
+              </Link>
+            ),
+          )}
           <div className="flex items-center gap-3 ml-2 mr-2">
             <a
               href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
@@ -104,19 +117,32 @@ export function Navbar() {
           >
             <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
             <div className="flex flex-col gap-6 mt-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    'text-lg font-medium border-b border-white/10 pb-3',
-                    isActive(link.path) ? 'text-accent border-accent' : 'text-white/90',
-                  )}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navLinks.map((link) =>
+                link.external ? (
+                  <a
+                    key={link.path}
+                    href={link.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-lg font-medium border-b border-white/10 pb-3 text-white/90"
+                  >
+                    {link.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      'text-lg font-medium border-b border-white/10 pb-3',
+                      isActive(link.path) ? 'text-accent border-accent' : 'text-white/90',
+                    )}
+                  >
+                    {link.name}
+                  </Link>
+                ),
+              )}
               <div className="flex items-center gap-4 py-2 mt-2">
                 <a
                   href="https://www.linkedin.com/company/davi-projetos-e-consultoria/?viewAsMember=true"
