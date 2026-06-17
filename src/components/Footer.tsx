@@ -30,7 +30,7 @@ export function Footer() {
                 <Linkedin className="w-4 h-4" />
               </a>
               <a
-                href="https://www.instagram.com/davi_projetos"
+                href="https://www.instagram.com/davi_projetos/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white/10 p-2 rounded-full hover:bg-accent hover:scale-110 transition-all duration-200"

@@ -70,7 +70,7 @@ export function Header() {
               <Linkedin className="w-5 h-5" />
             </a>
             <a
-              href="https://www.instagram.com/davi_projetos"
+              href="https://www.instagram.com/davi_projetos/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-secondary hover:scale-110 transition-all duration-200"
@@ -116,7 +116,7 @@ export function Header() {
               <Linkedin className="w-6 h-6" />
             </a>
             <a
-              href="https://www.instagram.com/davi_projetos"
+              href="https://www.instagram.com/davi_projetos/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-secondary hover:scale-110 transition-all duration-200"
