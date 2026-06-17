@@ -1,6 +1,9 @@
+import React, { useState, useRef, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { UploadCloud, X, File as FileIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Form,
@@ -172,6 +175,128 @@ function ProposalForm() {
   )
 }
 
+function FileUploader({
+  value,
+  onChange,
+}: {
+  value: File[] | undefined
+  onChange: (files: File[] | undefined) => void
+}) {
+  const [isDragging, setIsDragging] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }, [])
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }, [])
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDragging(false)
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const newFiles = Array.from(e.dataTransfer.files)
+        onChange([...(value || []), ...newFiles])
+      }
+    },
+    [value, onChange],
+  )
+
+  const handleRemoveFile = (indexToRemove: number) => {
+    if (value) {
+      const newFiles = value.filter((_, idx) => idx !== indexToRemove)
+      onChange(newFiles.length > 0 ? newFiles : undefined)
+    }
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  return (
+    <div>
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => inputRef.current?.click()}
+        className={cn(
+          'mt-2 flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 cursor-pointer transition-colors',
+          isDragging
+            ? 'border-primary bg-primary/5'
+            : 'border-muted-foreground/25 hover:bg-slate-50',
+        )}
+      >
+        <UploadCloud
+          className={cn('h-10 w-10 mb-2', isDragging ? 'text-primary' : 'text-muted-foreground')}
+        />
+        <p className="text-sm font-medium text-center">
+          {isDragging ? 'Solte os arquivos aqui' : 'Clique ou arraste arquivos para cá'}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1 text-center">Suporta múltiplos arquivos</p>
+        <input
+          type="file"
+          multiple
+          className="hidden"
+          ref={inputRef}
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              onChange([...(value || []), ...Array.from(e.target.files)])
+            }
+            if (inputRef.current) inputRef.current.value = ''
+          }}
+        />
+      </div>
+      {value && value.length > 0 && (
+        <div className="mt-4 space-y-2">
+          {value.map((f: File, idx: number) => (
+            <div
+              key={idx}
+              className="flex items-center justify-between p-3 bg-slate-50 border rounded-md"
+            >
+              <div className="flex items-center space-x-3 overflow-hidden">
+                <FileIcon className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                <div className="truncate">
+                  <p className="text-sm font-medium truncate">{f.name}</p>
+                  <p
+                    className={cn(
+                      'text-xs',
+                      f.size > 20 * 1024 * 1024 ? 'text-destructive' : 'text-muted-foreground',
+                    )}
+                  >
+                    {formatFileSize(f.size)} {f.size > 20 * 1024 * 1024 && '- Excede 20MB'}
+                  </p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleRemoveFile(idx)
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ServicesForm() {
   const form = useForm<z.infer<typeof servicesSchema>>({
     resolver: zodResolver(servicesSchema),
@@ -323,22 +448,14 @@ function ServicesForm() {
         <FormField
           control={form.control}
           name="files"
-          render={({ field: { value, onChange, ...field } }) => (
+          render={({ field: { value, onChange } }) => (
             <FormItem>
               <FormLabel>Upload de Arquivos (Opcional)</FormLabel>
               <FormDescription>
                 Selecione um ou mais arquivos. (Máx: 20MB por arquivo)
               </FormDescription>
               <FormControl>
-                <Input
-                  type="file"
-                  multiple
-                  onChange={(e) => {
-                    onChange(Array.from(e.target.files || []))
-                  }}
-                  {...field}
-                  value={undefined}
-                />
+                <FileUploader value={value} onChange={onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
