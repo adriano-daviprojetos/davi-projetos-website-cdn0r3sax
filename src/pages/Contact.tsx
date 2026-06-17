@@ -30,10 +30,26 @@ const proposalSchema = z.object({
 
 const servicesSchema = z.object({
   name: z.string().min(2, 'Nome é obrigatório'),
+  company: z.string().min(2, 'Empresa é obrigatória'),
   email: z.string().email('Email inválido'),
   phone: z.string().min(10, 'Telefone inválido'),
   services: z.array(z.string()).min(1, 'Selecione pelo menos um serviço'),
   description: z.string().optional(),
+  files: z
+    .array(z.instanceof(File))
+    .optional()
+    .superRefine((files, ctx) => {
+      if (files) {
+        files.forEach((file) => {
+          if (file.size > 20 * 1024 * 1024) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `O arquivo ${file.name} excede o limite de 20MB`,
+            })
+          }
+        })
+      }
+    }),
 })
 
 function ProposalForm() {
@@ -159,13 +175,22 @@ function ProposalForm() {
 function ServicesForm() {
   const form = useForm<z.infer<typeof servicesSchema>>({
     resolver: zodResolver(servicesSchema),
-    defaultValues: { name: '', email: '', phone: '', services: [], description: '' },
+    defaultValues: {
+      name: '',
+      company: '',
+      email: '',
+      phone: '',
+      services: [],
+      description: '',
+      files: [],
+    },
   })
   const { addRequest } = useRequestsStore()
 
   const onSubmit = async (data: z.infer<typeof servicesSchema>) => {
     try {
-      await addRequest({ type: 'service', ...data })
+      const { files, ...requestData } = data
+      await addRequest({ type: 'service', ...requestData })
       toast.success('Serviços solicitados com sucesso! Analisaremos sua requisição.')
       form.reset()
     } catch (e) {
@@ -187,7 +212,20 @@ function ServicesForm() {
               <FormItem>
                 <FormLabel>Nome Completo</FormLabel>
                 <FormControl>
-                  <Input placeholder="Seu nome" {...field} />
+                  <Input placeholder="João da Silva" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="company"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Empresa</FormLabel>
+                <FormControl>
+                  <Input placeholder="Construtora Exemplo" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -198,9 +236,9 @@ function ServicesForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Email Corporativo</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="seu@email.com" {...field} />
+                  <Input type="email" placeholder="joao@empresa.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -210,8 +248,8 @@ function ServicesForm() {
             control={form.control}
             name="phone"
             render={({ field }) => (
-              <FormItem className="md:col-span-2">
-                <FormLabel>Telefone</FormLabel>
+              <FormItem>
+                <FormLabel>Telefone / WhatsApp</FormLabel>
                 <FormControl>
                   <Input placeholder="(11) 99999-9999" {...field} />
                 </FormControl>
@@ -276,6 +314,31 @@ function ServicesForm() {
               <FormLabel>Observações Adicionais (Opcional)</FormLabel>
               <FormControl>
                 <Textarea placeholder="Alguma especificidade técnica?" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="files"
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormItem>
+              <FormLabel>Upload de Arquivos (Opcional)</FormLabel>
+              <FormDescription>
+                Selecione um ou mais arquivos. (Máx: 20MB por arquivo)
+              </FormDescription>
+              <FormControl>
+                <Input
+                  type="file"
+                  multiple
+                  onChange={(e) => {
+                    onChange(Array.from(e.target.files || []))
+                  }}
+                  {...field}
+                  value={undefined}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
