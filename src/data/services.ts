@@ -25,14 +25,14 @@ export const servicesList = [
   },
   {
     id: 'laudo-equipamentos',
-    title: 'Laudo de Inspeção',
+    title: 'Laudo de Inspeção de Equipamentos',
     description:
       'Certificação técnica completa de guindastes e maquinários pesados conforme normas vigentes.',
     icon: FileCheck,
   },
   {
     id: 'laudo-materiais',
-    title: 'Inspeção de Materiais',
+    title: 'Laudo de Inspeção de Materiais de Içamento',
     description:
       'Avaliação rigorosa e certificação para lingas, manilhas e diversos acessórios de amarração.',
     icon: LinkIcon,
@@ -46,14 +46,14 @@ export const servicesList = [
   },
   {
     id: 'supervisao',
-    title: 'Supervisão de Rigging',
+    title: 'Acompanhamento/Supervisão de Rigging',
     description:
       'Acompanhamento in loco realizado por especialistas experientes durante a execução de toda a operação.',
     icon: Users,
   },
   {
     id: 'fiscalizacao',
-    title: 'Aprovação de Operações',
+    title: 'Fiscalização/Aprovação de operações de içamento',
     description:
       'Auditoria especializada de terceira parte para verificação minuciosa e liberação de içamentos.',
     icon: ShieldCheck,

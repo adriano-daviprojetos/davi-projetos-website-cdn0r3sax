@@ -29,8 +29,8 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 const getStatusColor = (status: string) => {
-  if (status === 'Novo') return 'bg-blue-500 hover:bg-blue-600'
-  if (status === 'Em Análise') return 'bg-yellow-500 hover:bg-yellow-600'
+  if (status === 'Pending') return 'bg-blue-500 hover:bg-blue-600'
+  if (status === 'Reviewed') return 'bg-yellow-500 hover:bg-yellow-600'
   return 'bg-green-500 hover:bg-green-600'
 }
 
@@ -49,8 +49,8 @@ export default function Dashboard() {
   }, [requests, filter])
 
   const total = requests.length
-  const pending = requests.filter((r) => r.status === 'Novo').length
-  const inProgress = requests.filter((r) => r.status === 'Em Análise').length
+  const pending = requests.filter((r) => r.status === 'Pending').length
+  const inProgress = requests.filter((r) => r.status === 'Reviewed').length
 
   return (
     <div className="space-y-6">
@@ -75,7 +75,9 @@ export default function Dashboard() {
         </Card>
         <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">Novos (Aguardando)</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-600">
+              Pendentes (Pending)
+            </CardTitle>
             <Clock className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -84,7 +86,9 @@ export default function Dashboard() {
         </Card>
         <Card className="border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">Em Análise</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-600">
+              Em Análise (Reviewed)
+            </CardTitle>
             <CheckCircle2 className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -104,8 +108,8 @@ export default function Dashboard() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="Novo">Novos</SelectItem>
-                <SelectItem value="Em Análise">Em Análise</SelectItem>
+                <SelectItem value="Pending">Pendentes</SelectItem>
+                <SelectItem value="Reviewed">Em Análise</SelectItem>
                 <SelectItem value="Finalizado">Finalizados</SelectItem>
               </SelectContent>
             </Select>
@@ -155,14 +159,19 @@ export default function Dashboard() {
                       <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                         <Select
                           value={req.status}
-                          onValueChange={(val: any) => updateStatus(req.id, val)}
+                          onValueChange={async (val: any) => {
+                            await updateStatus(req.id, val)
+                            if (selectedRequest?.id === req.id) {
+                              setSelectedRequest({ ...req, status: val })
+                            }
+                          }}
                         >
                           <SelectTrigger className="w-[140px] ml-auto h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Novo">Novo</SelectItem>
-                            <SelectItem value="Em Análise">Em Análise</SelectItem>
+                            <SelectItem value="Pending">Pendente</SelectItem>
+                            <SelectItem value="Reviewed">Em Análise</SelectItem>
                             <SelectItem value="Finalizado">Finalizado</SelectItem>
                           </SelectContent>
                         </Select>
@@ -253,6 +262,26 @@ export default function Dashboard() {
                   </div>
                 </div>
               )}
+
+              <div className="pt-4 flex items-center justify-between border-t border-slate-100">
+                <span className="text-sm font-semibold text-slate-600">Alterar Status:</span>
+                <Select
+                  value={selectedRequest.status}
+                  onValueChange={async (val: any) => {
+                    await updateStatus(selectedRequest.id, val)
+                    setSelectedRequest({ ...selectedRequest, status: val })
+                  }}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Pending">Pendente</SelectItem>
+                    <SelectItem value="Reviewed">Em Análise</SelectItem>
+                    <SelectItem value="Finalizado">Finalizado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           )}
         </DialogContent>

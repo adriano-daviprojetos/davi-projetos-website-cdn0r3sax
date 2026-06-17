@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Construction } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import logoUrl from '@/assets/logonovo-74529.png'
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -21,8 +22,8 @@ export function Header() {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Sobre Nós', path: '/sobre' },
-    { name: 'Serviços', path: '/servicos' },
+    { name: 'Sobre a Empresa', path: '/sobre' },
+    { name: 'Serviços de Engenharia de Rigging', path: '/servicos' },
     { name: 'Contato', path: '/contato' },
   ]
 
@@ -37,15 +38,11 @@ export function Header() {
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <div className="bg-secondary text-white p-2 rounded-md">
-            <Construction size={28} />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-xl leading-tight tracking-tight uppercase">Davi</span>
-            <span className="text-[10px] uppercase font-semibold tracking-wider opacity-80">
-              Projetos de Rigging
-            </span>
-          </div>
+          <img
+            src={logoUrl}
+            alt="DAVI Projetos de Rigging"
+            className="h-12 w-auto object-contain bg-white rounded px-2 py-1"
+          />
         </Link>
 
         {/* Desktop Nav */}

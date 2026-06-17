@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Anchor, Phone, Mail, MapPin, Instagram, Linkedin } from 'lucide-react'
+import { Phone, Mail, MapPin, Instagram, Linkedin } from 'lucide-react'
+import logoUrl from '@/assets/logonovo-74529.png'
 
 export function Footer() {
   return (
@@ -7,16 +8,12 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="space-y-6">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="bg-accent text-white p-2 rounded-md inline-flex">
-                <Anchor className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col leading-tight">
-                <span className="font-bold text-xl tracking-wider">DAVI</span>
-                <span className="text-[0.60rem] tracking-widest opacity-80">
-                  PROJETOS DE RIGGING
-                </span>
-              </div>
+            <Link to="/" className="flex items-center gap-3 bg-white w-max p-2 rounded-md">
+              <img
+                src={logoUrl}
+                alt="DAVI Projetos de Rigging"
+                className="h-12 w-auto object-contain"
+              />
             </Link>
             <p className="text-sm text-primary-foreground/80 leading-relaxed">
               Especialistas em engenharia de rigging, garantindo segurança e precisão em operações
@@ -53,7 +50,7 @@ export function Footer() {
               </li>
               <li>
                 <Link to="/servicos" className="hover:text-accent transition-colors">
-                  Serviços
+                  Serviços de Engenharia de Rigging
                 </Link>
               </li>
               <li>

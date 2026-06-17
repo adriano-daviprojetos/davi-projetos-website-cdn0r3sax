@@ -43,10 +43,14 @@ function ProposalForm() {
   })
   const { addRequest } = useRequestsStore()
 
-  const onSubmit = (data: z.infer<typeof proposalSchema>) => {
-    addRequest({ type: 'proposal', ...data })
-    toast.success('Proposta solicitada com sucesso! Entraremos em contato em breve.')
-    form.reset()
+  const onSubmit = async (data: z.infer<typeof proposalSchema>) => {
+    try {
+      await addRequest({ type: 'proposal', ...data })
+      toast.success('Proposta solicitada com sucesso! Entraremos em contato em breve.')
+      form.reset()
+    } catch (e) {
+      toast.error('Erro ao salvar no banco de dados. Tente novamente.')
+    }
   }
 
   return (
@@ -142,9 +146,10 @@ function ProposalForm() {
         <Button
           type="submit"
           size="lg"
+          disabled={form.formState.isSubmitting}
           className="w-full bg-secondary hover:bg-secondary/90 text-white"
         >
-          Enviar Solicitação de Proposta
+          {form.formState.isSubmitting ? 'Enviando...' : 'Enviar Solicitação de Proposta'}
         </Button>
       </form>
     </Form>
@@ -158,10 +163,14 @@ function ServicesForm() {
   })
   const { addRequest } = useRequestsStore()
 
-  const onSubmit = (data: z.infer<typeof servicesSchema>) => {
-    addRequest({ type: 'service', ...data })
-    toast.success('Serviços solicitados com sucesso! Analisaremos sua requisição.')
-    form.reset()
+  const onSubmit = async (data: z.infer<typeof servicesSchema>) => {
+    try {
+      await addRequest({ type: 'service', ...data })
+      toast.success('Serviços solicitados com sucesso! Analisaremos sua requisição.')
+      form.reset()
+    } catch (e) {
+      toast.error('Erro ao salvar no banco de dados. Tente novamente.')
+    }
   }
 
   return (
@@ -276,50 +285,12 @@ function ServicesForm() {
         <Button
           type="submit"
           size="lg"
+          disabled={form.formState.isSubmitting}
           className="w-full bg-primary hover:bg-primary/90 text-white"
         >
-          Solicitar Atendimento Técnico
+          {form.formState.isSubmitting ? 'Enviando...' : 'Solicitar Atendimento Técnico'}
         </Button>
       </form>
     </Form>
-  )
-}
-
-export default function Contact() {
-  return (
-    <div className="bg-slate-50 min-h-screen pb-20">
-      <div className="bg-primary pt-16 pb-32 text-center text-white">
-        <h1 className="text-4xl font-bold mb-4">Fale Conosco</h1>
-        <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-          Nossa equipe comercial e técnica está pronta para atender às necessidades do seu projeto
-          com agilidade.
-        </p>
-      </div>
-
-      <div className="container mx-auto px-4 max-w-4xl -mt-20">
-        <Tabs defaultValue="proposal" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 h-14 bg-white shadow-sm rounded-lg p-1">
-            <TabsTrigger
-              value="proposal"
-              className="text-base font-semibold data-[state=active]:bg-primary data-[state=active]:text-white rounded-md"
-            >
-              Proposta Comercial
-            </TabsTrigger>
-            <TabsTrigger
-              value="services"
-              className="text-base font-semibold data-[state=active]:bg-secondary data-[state=active]:text-white rounded-md"
-            >
-              Solicitar Serviços
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="proposal" className="animate-fade-in">
-            <ProposalForm />
-          </TabsContent>
-          <TabsContent value="services" className="animate-fade-in">
-            <ServicesForm />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
   )
 }

@@ -2,8 +2,9 @@ import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
-import { Menu, Anchor } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import logoUrl from '@/assets/logonovo-74529.png'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -18,8 +19,8 @@ export function Navbar() {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Sobre Nós', path: '/sobre' },
-    { name: 'Serviços', path: '/servicos' },
+    { name: 'Sobre a Empresa', path: '/sobre' },
+    { name: 'Serviços de Engenharia de Rigging', path: '/servicos' },
     { name: 'Contato', path: '/contato' },
   ]
 
@@ -42,21 +43,12 @@ export function Navbar() {
       )}
     >
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="bg-accent text-white p-2 rounded-md flex items-center justify-center">
-            <Anchor className="w-7 h-7" />
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="font-bold text-2xl tracking-wider">DAVI</span>
-            <span
-              className={cn(
-                'text-[0.65rem] tracking-widest opacity-90',
-                isScrolled || isHome ? 'text-white/80' : 'text-muted-foreground',
-              )}
-            >
-              PROJETOS DE RIGGING
-            </span>
-          </div>
+        <Link to="/" className="flex items-center">
+          <img
+            src={logoUrl}
+            alt="DAVI Projetos de Rigging"
+            className="h-12 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Nav */}

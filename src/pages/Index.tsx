@@ -39,7 +39,7 @@ export default function Index() {
               variant="outline"
               className="text-primary bg-white hover:bg-gray-100 border-none shadow-lg text-md h-14 px-8"
             >
-              <Link to="/servicos">Nossos Serviços</Link>
+              <Link to="/servicos">Serviços de Engenharia</Link>
             </Button>
           </div>
         </div>

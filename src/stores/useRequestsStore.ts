@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
-export type RequestStatus = 'Novo' | 'Em Análise' | 'Finalizado'
+export type RequestStatus = 'Pending' | 'Reviewed' | 'Finalizado'
 export type RequestType = 'proposal' | 'service'
 
 export interface RequestEntry {
@@ -27,7 +27,7 @@ const mockInitial: RequestEntry[] = [
     phone: '11999999999',
     location: 'São Paulo, SP',
     description: 'Içamento de vigas de 50 toneladas.',
-    status: 'Novo',
+    status: 'Pending',
     createdAt: new Date(Date.now() - 86400000).toISOString(),
   },
 ]
@@ -45,21 +45,26 @@ export default function useRequestsStore() {
     }
   }, [])
 
-  const addRequest = useCallback((entry: Omit<RequestEntry, 'id' | 'status' | 'createdAt'>) => {
-    const newEntry: RequestEntry = {
-      ...entry,
-      id: Math.random().toString(36).substring(2, 9),
-      status: 'Novo',
-      createdAt: new Date().toISOString(),
-    }
-    setRequests((prev) => {
-      const updated = [newEntry, ...prev]
-      localStorage.setItem('davi_requests', JSON.stringify(updated))
-      return updated
-    })
-  }, [])
+  const addRequest = useCallback(
+    async (entry: Omit<RequestEntry, 'id' | 'status' | 'createdAt'>) => {
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      const newEntry: RequestEntry = {
+        ...entry,
+        id: Math.random().toString(36).substring(2, 9),
+        status: 'Pending',
+        createdAt: new Date().toISOString(),
+      }
+      setRequests((prev) => {
+        const updated = [newEntry, ...prev]
+        localStorage.setItem('davi_requests', JSON.stringify(updated))
+        return updated
+      })
+    },
+    [],
+  )
 
-  const updateStatus = useCallback((id: string, status: RequestStatus) => {
+  const updateStatus = useCallback(async (id: string, status: RequestStatus) => {
+    await new Promise((resolve) => setTimeout(resolve, 400))
     setRequests((prev) => {
       const updated = prev.map((r) => (r.id === id ? { ...r, status } : r))
       localStorage.setItem('davi_requests', JSON.stringify(updated))

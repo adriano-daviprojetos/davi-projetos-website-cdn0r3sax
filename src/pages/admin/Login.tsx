@@ -4,8 +4,8 @@ import useAuthStore from '@/stores/useAuthStore'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Shield } from 'lucide-react'
 import { toast } from 'sonner'
+import logoUrl from '@/assets/logonovo-74529.png'
 
 export default function Login() {
   const [pwd, setPwd] = useState('')
@@ -28,8 +28,12 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
       <Card className="w-full max-w-md shadow-elevation border-none">
         <CardHeader className="text-center space-y-4 pt-8">
-          <div className="mx-auto bg-primary w-16 h-16 rounded-full flex items-center justify-center">
-            <Shield className="text-white w-8 h-8" />
+          <div className="mx-auto flex items-center justify-center bg-black p-4 rounded-md">
+            <img
+              src={logoUrl}
+              alt="DAVI Projetos de Rigging"
+              className="h-12 w-auto object-contain"
+            />
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-primary">Acesso Restrito</CardTitle>
