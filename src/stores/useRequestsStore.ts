@@ -1,76 +1,61 @@
 import { useState, useEffect, useCallback } from 'react'
+import pb from '@/lib/pocketbase/client'
+import { useRealtime } from '@/hooks/use-realtime'
 
 export type RequestStatus = 'Pending' | 'Reviewed' | 'Finalizado'
-export type RequestType = 'proposal' | 'service'
+export type RequestType = 'proposta' | 'atendimento'
 
 export interface RequestEntry {
   id: string
-  type: RequestType
+  request_type: RequestType
   name: string
-  company?: string
+  company: string
   email: string
   phone: string
   location?: string
   description?: string
   services?: string[]
   status: RequestStatus
-  createdAt: string
+  created: string
+  files?: string[]
 }
-
-const mockInitial: RequestEntry[] = [
-  {
-    id: '1a2b3c',
-    type: 'proposal',
-    name: 'Carlos Silva',
-    company: 'Construtora Alpha',
-    email: 'carlos@alpha.com',
-    phone: '11999999999',
-    location: 'São Paulo, SP',
-    description: 'Içamento de vigas de 50 toneladas.',
-    status: 'Pending',
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-  },
-]
 
 export default function useRequestsStore() {
   const [requests, setRequests] = useState<RequestEntry[]>([])
 
-  useEffect(() => {
-    const data = localStorage.getItem('davi_requests')
-    if (data) {
-      setRequests(JSON.parse(data))
-    } else {
-      setRequests(mockInitial)
-      localStorage.setItem('davi_requests', JSON.stringify(mockInitial))
+  const loadData = useCallback(async () => {
+    if (!pb.authStore.isValid) return
+    try {
+      const records = await pb.collection('service_requests').getFullList<RequestEntry>({
+        sort: '-created',
+      })
+      setRequests(records)
+    } catch (e) {
+      console.error('Error fetching requests', e)
     }
   }, [])
 
-  const addRequest = useCallback(
-    async (entry: Omit<RequestEntry, 'id' | 'status' | 'createdAt'>) => {
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      const newEntry: RequestEntry = {
-        ...entry,
-        id: Math.random().toString(36).substring(2, 9),
-        status: 'Pending',
-        createdAt: new Date().toISOString(),
-      }
-      setRequests((prev) => {
-        const updated = [newEntry, ...prev]
-        localStorage.setItem('davi_requests', JSON.stringify(updated))
-        return updated
-      })
+  useEffect(() => {
+    loadData()
+  }, [loadData])
+
+  useRealtime(
+    'service_requests',
+    () => {
+      loadData()
     },
-    [],
+    pb.authStore.isValid,
   )
 
   const updateStatus = useCallback(async (id: string, status: RequestStatus) => {
-    await new Promise((resolve) => setTimeout(resolve, 400))
-    setRequests((prev) => {
-      const updated = prev.map((r) => (r.id === id ? { ...r, status } : r))
-      localStorage.setItem('davi_requests', JSON.stringify(updated))
-      return updated
-    })
+    try {
+      await pb.collection('service_requests').update(id, { status })
+      // Optimitistic update
+      setRequests((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)))
+    } catch (e) {
+      console.error('Error updating status', e)
+    }
   }, [])
 
-  return { requests, addRequest, updateStatus }
+  return { requests, updateStatus }
 }

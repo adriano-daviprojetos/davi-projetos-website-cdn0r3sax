@@ -1,58 +1,36 @@
-import { Navigate, Outlet } from 'react-router-dom'
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from '@/components/ui/sidebar'
-import useAuthStore from '@/stores/useAuthStore'
-import { LayoutDashboard, LogOut, Shield } from 'lucide-react'
+import { Navigate, Outlet, Link } from 'react-router-dom'
+import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 
 export function AdminLayout() {
-  const { isAuthenticated, logout } = useAuthStore()
+  const { isAuthenticated, loading, signOut } = useAuth()
+
+  if (loading) {
+    return <div className="flex h-screen items-center justify-center">Carregando...</div>
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-slate-50 text-slate-900">
-        <Sidebar>
-          <SidebarHeader className="p-4 flex items-center gap-2 font-bold text-lg bg-primary text-white">
-            <Shield size={20} />
-            DAVI Admin
-          </SidebarHeader>
-          <SidebarContent className="p-2">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className="mb-2">
-                  <a href="/admin">
-                    <LayoutDashboard className="mr-2 h-4 w-4" />
-                    <span>Dashboard</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={logout}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sair do Sistema</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarContent>
-        </Sidebar>
-        <main className="flex-1 p-8 overflow-y-auto">
-          <Outlet />
-        </main>
-      </div>
-    </SidebarProvider>
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <header className="bg-white border-b px-6 py-4 flex items-center justify-between">
+        <Link to="/admin" className="font-bold text-lg text-primary">
+          Davi Projetos Admin
+        </Link>
+        <div className="flex items-center gap-4">
+          <Link to="/" className="text-sm text-slate-500 hover:text-slate-900">
+            Ver Site
+          </Link>
+          <Button variant="outline" size="sm" onClick={signOut}>
+            Sair
+          </Button>
+        </div>
+      </header>
+      <main className="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full">
+        <Outlet />
+      </main>
+    </div>
   )
 }

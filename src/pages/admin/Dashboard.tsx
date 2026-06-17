@@ -35,7 +35,7 @@ const getStatusColor = (status: string) => {
 }
 
 const getTypeLabel = (type: string) => {
-  return type === 'proposal' ? 'Proposta' : 'Serviço'
+  return type === 'proposta' ? 'Proposta' : 'Atendimento'
 }
 
 export default function Dashboard() {
@@ -142,14 +142,14 @@ export default function Dashboard() {
                       onClick={() => setSelectedRequest(req)}
                     >
                       <TableCell className="font-medium text-slate-600">
-                        {format(new Date(req.createdAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                        {format(new Date(req.created), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                       </TableCell>
                       <TableCell>
                         <div className="font-semibold text-primary">{req.name}</div>
                         {req.company && <div className="text-xs text-slate-500">{req.company}</div>}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">{getTypeLabel(req.type)}</Badge>
+                        <Badge variant="outline">{getTypeLabel(req.request_type)}</Badge>
                       </TableCell>
                       <TableCell>
                         <Badge className={`${getStatusColor(req.status)} text-white border-none`}>
@@ -186,7 +186,7 @@ export default function Dashboard() {
       </Card>
 
       <Dialog open={!!selectedRequest} onOpenChange={(o) => !o && setSelectedRequest(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl text-primary flex items-center gap-2">
               Detalhes da Solicitação
@@ -197,7 +197,7 @@ export default function Dashboard() {
             <DialogDescription>
               ID: {selectedRequest?.id} • Criado em{' '}
               {selectedRequest &&
-                format(new Date(selectedRequest.createdAt), "dd/MM/yyyy 'às' HH:mm")}
+                format(new Date(selectedRequest.created), "dd/MM/yyyy 'às' HH:mm")}
             </DialogDescription>
           </DialogHeader>
           {selectedRequest && (
@@ -259,6 +259,28 @@ export default function Dashboard() {
                   </span>
                   <div className="bg-white border rounded-md p-3 text-sm whitespace-pre-wrap">
                     {selectedRequest.description}
+                  </div>
+                </div>
+              )}
+
+              {selectedRequest.files && selectedRequest.files.length > 0 && (
+                <div>
+                  <span className="block text-xs font-semibold text-slate-500 uppercase mb-2">
+                    Arquivos Anexos
+                  </span>
+                  <div className="flex flex-col gap-2">
+                    {selectedRequest.files.map((file) => (
+                      <a
+                        key={file}
+                        href={`${import.meta.env.VITE_POCKETBASE_URL}/api/files/service_requests/${selectedRequest.id}/${file}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-500 hover:underline flex items-center gap-1"
+                      >
+                        <FileText className="w-4 h-4" />
+                        {file}
+                      </a>
+                    ))}
                   </div>
                 </div>
               )}

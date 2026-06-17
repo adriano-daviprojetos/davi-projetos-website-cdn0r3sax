@@ -18,9 +18,10 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import useRequestsStore from '@/stores/useRequestsStore'
 import { toast } from 'sonner'
 import { servicesList } from '@/data/services'
+import pb from '@/lib/pocketbase/client'
+import { getErrorMessage } from '@/lib/pocketbase/errors'
 
 const proposalSchema = z.object({
   name: z.string().min(2, 'Nome é obrigatório'),
@@ -60,15 +61,24 @@ function ProposalForm() {
     resolver: zodResolver(proposalSchema),
     defaultValues: { name: '', company: '', email: '', phone: '', location: '', description: '' },
   })
-  const { addRequest } = useRequestsStore()
 
   const onSubmit = async (data: z.infer<typeof proposalSchema>) => {
     try {
-      await addRequest({ type: 'proposal', ...data })
+      const formData = new FormData()
+      formData.append('request_type', 'proposta')
+      formData.append('status', 'Pending')
+      formData.append('name', data.name)
+      formData.append('company', data.company)
+      formData.append('email', data.email)
+      formData.append('phone', data.phone)
+      formData.append('location', data.location)
+      formData.append('description', data.description)
+
+      await pb.collection('service_requests').create(formData)
       toast.success('Proposta solicitada com sucesso! Entraremos em contato em breve.')
       form.reset()
     } catch (e) {
-      toast.error('Erro ao salvar no banco de dados. Tente novamente.')
+      toast.error(getErrorMessage(e))
     }
   }
 
@@ -310,16 +320,33 @@ function ServicesForm() {
       files: [],
     },
   })
-  const { addRequest } = useRequestsStore()
 
   const onSubmit = async (data: z.infer<typeof servicesSchema>) => {
     try {
-      const { files, ...requestData } = data
-      await addRequest({ type: 'service', ...requestData })
+      const formData = new FormData()
+      formData.append('request_type', 'atendimento')
+      formData.append('status', 'Pending')
+      formData.append('name', data.name)
+      formData.append('company', data.company)
+      formData.append('email', data.email)
+      formData.append('phone', data.phone)
+      formData.append('services', JSON.stringify(data.services))
+
+      if (data.description) {
+        formData.append('description', data.description)
+      }
+
+      if (data.files && data.files.length > 0) {
+        for (const file of data.files) {
+          formData.append('files', file)
+        }
+      }
+
+      await pb.collection('service_requests').create(formData)
       toast.success('Serviços solicitados com sucesso! Analisaremos sua requisição.')
       form.reset()
     } catch (e) {
-      toast.error('Erro ao salvar no banco de dados. Tente novamente.')
+      toast.error(getErrorMessage(e))
     }
   }
 
@@ -394,7 +421,7 @@ function ServicesForm() {
                 <FormDescription>Selecione um ou mais serviços que você precisa.</FormDescription>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
-                {servicesList.map((item) => (
+                {servicesList.map((item: any) => (
                   <FormField
                     key={item.id}
                     control={form.control}
