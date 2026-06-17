@@ -41,7 +41,7 @@ export const servicesList = [
     id: 'visita-tecnica',
     title: 'Visita Técnica',
     description:
-      'Avaliação profissional em campo para a elaboração de estudos de viabilidade técnica sólidos.',
+      'Avaliação profissional em campo para a elaboração de estudos de viabilidade técnica e planos de rigging.',
     icon: Map,
   },
   {
