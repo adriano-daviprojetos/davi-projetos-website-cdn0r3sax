@@ -5,6 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 
 import { AuthProvider } from '@/hooks/use-auth'
 import Layout from './components/Layout'
+import { WhatsAppButton } from './components/WhatsAppButton'
 import Index from './pages/Index'
 import About from './pages/About'
 import Services from './pages/Services'
@@ -38,6 +39,7 @@ const App = () => (
 
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <WhatsAppButton />
       </TooltipProvider>
     </BrowserRouter>
   </AuthProvider>
