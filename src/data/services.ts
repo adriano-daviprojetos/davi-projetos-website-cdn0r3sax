@@ -55,7 +55,7 @@ export const servicesList = [
     id: 'fiscalizacao',
     title: 'Fiscalização/Aprovação de operações de içamento',
     description:
-      'Auditoria especializada de terceira parte para verificação minuciosa e liberação de içamentos.',
+      'Auditoria especializada para análise e aprovação de projetos de rigging e liberação de operações de içamentos.',
     icon: ShieldCheck,
   },
 ]
