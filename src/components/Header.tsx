@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Crane } from 'lucide-react'
+import { Menu, X, Construction } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
@@ -38,7 +38,7 @@ export function Header() {
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <div className="bg-secondary text-white p-2 rounded-md">
-            <Crane size={28} />
+            <Construction size={28} />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-xl leading-tight tracking-tight uppercase">Davi</span>
