@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { UploadCloud, X, File as FileIcon } from 'lucide-react'
+import { UploadCloud, X, File as FileIcon, Check, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -57,6 +57,7 @@ const servicesSchema = z.object({
 })
 
 function ProposalForm() {
+  const [isSuccess, setIsSuccess] = useState(false)
   const form = useForm<z.infer<typeof proposalSchema>>({
     resolver: zodResolver(proposalSchema),
     defaultValues: { name: '', company: '', email: '', phone: '', location: '', description: '' },
@@ -76,13 +77,29 @@ function ProposalForm() {
 
       await pb.collection('service_requests').create(formData)
       if (typeof window !== 'undefined' && (window as any).gtagSendEvent) {
-        ;(window as any).gtagSendEvent()
+        ;(window as any).gtagSendEvent('ads_conversion_Contato_1')
       }
-      toast.success('Proposta solicitada com sucesso! Entraremos em contato em breve.')
+      setIsSuccess(true)
       form.reset()
     } catch (e) {
       toast.error(getErrorMessage(e))
     }
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-6 mt-6 bg-white rounded-xl shadow-subtle border text-center animate-fade-in-up">
+        <div className="h-20 w-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+          <Check className="h-10 w-10" />
+        </div>
+        <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-4">
+          Sua solicitação foi enviada com sucesso! Em breve entraremos em contato.
+        </h3>
+        <Button onClick={() => setIsSuccess(false)} size="lg" variant="outline">
+          Enviar nova solicitação
+        </Button>
+      </div>
+    )
   }
 
   return (
@@ -181,7 +198,14 @@ function ProposalForm() {
           disabled={form.formState.isSubmitting}
           className="w-full bg-secondary hover:bg-secondary/90 text-white"
         >
-          {form.formState.isSubmitting ? 'Enviando...' : 'Enviar Solicitação de Proposta'}
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Enviando...
+            </>
+          ) : (
+            'Enviar Solicitação de Proposta'
+          )}
         </Button>
       </form>
     </Form>
@@ -311,6 +335,7 @@ function FileUploader({
 }
 
 function ServicesForm() {
+  const [isSuccess, setIsSuccess] = useState(false)
   const form = useForm<z.infer<typeof servicesSchema>>({
     resolver: zodResolver(servicesSchema),
     defaultValues: {
@@ -347,13 +372,29 @@ function ServicesForm() {
 
       await pb.collection('service_requests').create(formData)
       if (typeof window !== 'undefined' && (window as any).gtagSendEvent) {
-        ;(window as any).gtagSendEvent()
+        ;(window as any).gtagSendEvent('ads_conversion_Contato_1')
       }
-      toast.success('Serviços solicitados com sucesso! Analisaremos sua requisição.')
+      setIsSuccess(true)
       form.reset()
     } catch (e) {
       toast.error(getErrorMessage(e))
     }
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-6 mt-6 bg-white rounded-xl shadow-subtle border text-center animate-fade-in-up">
+        <div className="h-20 w-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+          <Check className="h-10 w-10" />
+        </div>
+        <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-4">
+          Sua solicitação foi enviada com sucesso! Em breve entraremos em contato.
+        </h3>
+        <Button onClick={() => setIsSuccess(false)} size="lg" variant="outline">
+          Enviar nova solicitação
+        </Button>
+      </div>
+    )
   }
 
   return (
@@ -501,7 +542,14 @@ function ServicesForm() {
           disabled={form.formState.isSubmitting}
           className="w-full bg-primary hover:bg-primary/90 text-white"
         >
-          {form.formState.isSubmitting ? 'Enviando...' : 'Solicitar Atendimento Técnico'}
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Enviando...
+            </>
+          ) : (
+            'Solicitar Atendimento Técnico'
+          )}
         </Button>
       </form>
     </Form>
