@@ -42,6 +42,14 @@ export function Footer() {
                 href="https://wa.me/5511966162222"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (typeof window !== 'undefined' && (window as any).gtagSendEvent) {
+                    ;(window as any).gtagSendEvent('https://wa.me/5511966162222')
+                  } else {
+                    window.open('https://wa.me/5511966162222', '_blank')
+                  }
+                }}
                 className="bg-white/10 p-2 rounded-full hover:bg-accent hover:scale-110 transition-all duration-200"
                 aria-label="WhatsApp"
               >

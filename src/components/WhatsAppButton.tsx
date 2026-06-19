@@ -4,6 +4,14 @@ export function WhatsAppButton() {
       href="https://wa.me/5511966162222"
       target="_blank"
       rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault()
+        if (typeof window !== 'undefined' && (window as any).gtagSendEvent) {
+          ;(window as any).gtagSendEvent('https://wa.me/5511966162222')
+        } else {
+          window.open('https://wa.me/5511966162222', '_blank')
+        }
+      }}
       className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#128C7E] focus:ring-offset-2"
       aria-label="Contact us on WhatsApp"
     >

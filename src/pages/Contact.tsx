@@ -75,6 +75,9 @@ function ProposalForm() {
       formData.append('description', data.description)
 
       await pb.collection('service_requests').create(formData)
+      if (typeof window !== 'undefined' && (window as any).gtagSendEvent) {
+        ;(window as any).gtagSendEvent()
+      }
       toast.success('Proposta solicitada com sucesso! Entraremos em contato em breve.')
       form.reset()
     } catch (e) {
@@ -343,6 +346,9 @@ function ServicesForm() {
       }
 
       await pb.collection('service_requests').create(formData)
+      if (typeof window !== 'undefined' && (window as any).gtagSendEvent) {
+        ;(window as any).gtagSendEvent()
+      }
       toast.success('Serviços solicitados com sucesso! Analisaremos sua requisição.')
       form.reset()
     } catch (e) {
@@ -515,6 +521,14 @@ export default function Contact() {
           href="https://wa.me/5511966162222"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={(e) => {
+            e.preventDefault()
+            if (typeof window !== 'undefined' && (window as any).gtagSendEvent) {
+              ;(window as any).gtagSendEvent('https://wa.me/5511966162222')
+            } else {
+              window.open('https://wa.me/5511966162222', '_blank')
+            }
+          }}
           className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#128C7E] text-white px-6 py-3 rounded-full font-medium transition-all duration-200 shadow-md hover:shadow-lg"
         >
           <svg
